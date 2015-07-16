@@ -37,7 +37,8 @@ namespace CKAN.NetKAN.Transformers
                 new DownloadSizeTransformer(http, fileService),
                 new GeneratedByTransformer(),
                 new OptimusPrimeTransformer(),
-                new StripNetkanMetadataTransformer()
+                new StripNetkanMetadataTransformer(),
+                new PropertySortTransformer()
             };
         }
 
