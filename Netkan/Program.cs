@@ -32,37 +32,43 @@ namespace CKAN.NetKAN
             {
                 ProcessArgs(args);
 
+                // If we see the --version flag, then display our build info
+                // and exit.
+                if (Options.Version)
+                {
+                    Console.WriteLine(Meta.Version());
+                    return ExitOk;
+                }
+
                 if (Options.File != null)
                 {
                     Log.InfoFormat("Transforming {0}", Options.File);
 
                     var moduleService = new ModuleService();
                     var fileService = new FileService();
+                    var http = new CachingHttpService(FindCache(new KSPManager(new ConsoleUser(false))));
 
-                    using (var http = new CachingHttpService(FindCache(new KSPManager(new ConsoleUser(false)))))
-                    {
-                        var netkan = ReadNetkan();
-                        Log.Info("Finished reading input");
+                    var netkan = ReadNetkan();
+                    Log.Info("Finished reading input");
 
-                        new NetkanValidator().Validate(netkan);
-                        Log.Info("Input successfully passed pre-validation");
+                    new NetkanValidator().Validate(netkan);
+                    Log.Info("Input successfully passed pre-validation");
 
-                        var transformer = new NetkanTransformer(
-                            http,
-                            fileService,
-                            moduleService,
-                            Options.GitHubToken,
-                            Options.PreRelease
-                        );
+                    var transformer = new NetkanTransformer(
+                        http,
+                        fileService,
+                        moduleService,
+                        Options.GitHubToken,
+                        Options.PreRelease
+                    );
 
-                        var ckan = transformer.Transform(netkan);
-                        Log.Info("Finished transformation");
+                    var ckan = transformer.Transform(netkan);
+                    Log.Info("Finished transformation");
 
-                        new CkanValidator(netkan, http, moduleService).Validate(ckan);
-                        Log.Info("Output successfully passed post-validation");
+                    new CkanValidator(netkan, http, moduleService).Validate(ckan);
+                    Log.Info("Output successfully passed post-validation");
 
-                        WriteCkan(ckan);
-                    }
+                    WriteCkan(ckan);
                 }
                 else
                 {
@@ -94,7 +100,7 @@ namespace CKAN.NetKAN
             {
                 Debugger.Launch();
             }
-
+                
             Options = new CmdLineOptions();
             Parser.Default.ParseArgumentsStrict(args, Options);
 

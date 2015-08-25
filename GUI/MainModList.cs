@@ -453,11 +453,13 @@ namespace CKAN
                 var latest_version_cell = new DataGridViewTextBoxCell {Value = mod.LatestVersion};
                 var description_cell = new DataGridViewTextBoxCell {Value = mod.Abstract};
                 var KSPCompatibility_cell = new DataGridViewTextBoxCell {Value = mod.KSPCompatibility};
+                var size_cell = new DataGridViewTextBoxCell {Value = mod.DownloadSize};
 
                 item.Cells.AddRange(installed_cell, update_cell,
                     name_cell, author_cell,
                     installed_version_cell, latest_version_cell,
-                    KSPCompatibility_cell, description_cell);
+                    KSPCompatibility_cell, size_cell,
+                    description_cell);
 
                 installed_cell.ReadOnly = !mod.IsInstallable();
                 update_cell.ReadOnly = !mod.IsInstallable() || !mod.HasUpdate;
@@ -469,7 +471,10 @@ namespace CKAN
 
         private bool IsNameInNameFilter(GUIMod mod)
         {
-            return mod.Name.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
+            string abbrevation = new string(mod.Name.Split(' ').
+                Where(s => s.Length > 0).Select(s => s[0]).ToArray());
+            return mod.Name.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1
+                || abbrevation.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
         }
 
         private bool IsAuthorInauthorFilter(GUIMod mod)

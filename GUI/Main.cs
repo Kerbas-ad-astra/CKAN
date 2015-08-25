@@ -312,12 +312,12 @@ namespace CKAN
 
             ApplyToolButton.Enabled = false;
 
+            CurrentInstanceUpdated();
+
             if (m_Configuration.RefreshOnStartup)
             {
                 UpdateRepo();
             }
-
-            CurrentInstanceUpdated();
 
             Text = String.Format("CKAN {0} - KSP {1}  --  {2}", Meta.Version(), CurrentInstance.Version(),
                 CurrentInstance.GameDir());
@@ -384,6 +384,9 @@ namespace CKAN
             // Copy window size to app settings
             m_Configuration.WindowSize = WindowState == FormWindowState.Normal ? Size : RestoreBounds.Size;
 
+            // Save the active filter
+            m_Configuration.ActiveFilter = (int)mainModList.ModFilter;
+
             // Save settings
             m_Configuration.Save();
             base.OnFormClosing(e);
@@ -412,6 +415,8 @@ namespace CKAN
             UpdateModsList();
             ChangeSet = null;
             Conflicts = null;
+
+            Filter((GUIModFilter)m_Configuration.ActiveFilter);
         }
 
         private void RefreshToolButton_Click(object sender, EventArgs e)
@@ -723,44 +728,57 @@ namespace CKAN
 
         private void FilterCompatibleButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.Compatible;
-            FilterToolButton.Text = "Filter (Compatible)";
+            Filter(GUIModFilter.Compatible);
         }
 
         private void FilterInstalledButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.Installed;
-            FilterToolButton.Text = "Filter (Installed)";
+            Filter(GUIModFilter.Installed);
         }
 
         private void FilterInstalledUpdateButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.InstalledUpdateAvailable;
-            FilterToolButton.Text = "Filter (Upgradeable)";
+            Filter(GUIModFilter.InstalledUpdateAvailable);
         }
 
         private void FilterNewButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.NewInRepository;
-            FilterToolButton.Text = "Filter (New)";
+            Filter(GUIModFilter.NewInRepository);
         }
 
         private void FilterNotInstalledButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.NotInstalled;
-            FilterToolButton.Text = "Filter (Not installed)";
+            Filter(GUIModFilter.NotInstalled);
         }
 
         private void FilterIncompatibleButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.Incompatible;
-            FilterToolButton.Text = "Filter (Incompatible)";
+            Filter(GUIModFilter.Incompatible);
         }
 
         private void FilterAllButton_Click(object sender, EventArgs e)
         {
-            mainModList.ModFilter = GUIModFilter.All;
-            FilterToolButton.Text = "Filter (All)";
+            Filter(GUIModFilter.All);
+        }
+
+        private void Filter(GUIModFilter filter)
+        {
+            mainModList.ModFilter = filter;
+
+            if (filter == GUIModFilter.All)
+                FilterToolButton.Text = "Filter (All)";
+            else if (filter == GUIModFilter.Incompatible)
+                FilterToolButton.Text = "Filter (Incompatible)";
+            else if (filter == GUIModFilter.Installed)
+                FilterToolButton.Text = "Filter (Installed)";
+            else if (filter == GUIModFilter.InstalledUpdateAvailable)
+                FilterToolButton.Text = "Filter (Upgradeable)";
+            else if (filter == GUIModFilter.NewInRepository)
+                FilterToolButton.Text = "Filter (New)";
+            else if (filter == GUIModFilter.NotInstalled)
+                FilterToolButton.Text = "Filter (New)";
+            else
+                FilterToolButton.Text = "Filter (Compatible)";
         }
 
         private void ContentsDownloadButton_Click(object sender, EventArgs e)
@@ -920,6 +938,7 @@ namespace CKAN
             var exportOptions = new List<ExportOption>
             {
                 new ExportOption(ExportFileType.Ckan, "CKAN metadata (*.ckan)", "ckan"),
+                new ExportOption(ExportFileType.CkanFavourite, "CKAN favourite list (*.ckan)", "ckan"),
                 new ExportOption(ExportFileType.PlainText, "Plain text (*.txt)", "txt"),
                 new ExportOption(ExportFileType.Markdown, "Markdown (*.md)", "md"),
                 new ExportOption(ExportFileType.BbCode, "BBCode (*.txt)", "txt"),
@@ -939,10 +958,19 @@ namespace CKAN
             {
                 var exportOption = exportOptions[dlg.FilterIndex - 1]; // FilterIndex is 1-indexed
 
-                if (exportOption.ExportFileType == ExportFileType.Ckan)
+                if (exportOption.ExportFileType == ExportFileType.Ckan || exportOption.ExportFileType == ExportFileType.CkanFavourite)
                 {
+                    bool recommends = false;
+                    bool versions = true;
+
+                    if (exportOption.ExportFileType == ExportFileType.CkanFavourite)
+                    {
+                        recommends = true;
+                        versions = false;
+                    }
+
                     // Save, just to be certain that the installed-*.ckan metapackage is generated
-                    RegistryManager.Instance(CurrentInstance).Save();
+                    RegistryManager.Instance(CurrentInstance).Save(true, recommends, versions);
 
                     // TODO: The core might eventually save as something other than 'installed-default.ckan'
                     File.Copy(Path.Combine(CurrentInstance.CkanDir(), "installed-default.ckan"), dlg.FileName, true);
@@ -982,10 +1010,10 @@ namespace CKAN
             FocusMod(e.Node.Name, true);
         }
 
-        private void FocusMod(string key, bool exactMatch) 
+        private void FocusMod(string key, bool exactMatch)
         {
             DataGridViewRow current_row = ModList.CurrentRow;
-            string current_name = ((GUIMod)current_row.Tag).Name;
+            int currentIndex = current_row != null ? current_row.Index : 0;
             DataGridViewRow first_match = null;
 
             var does_name_begin_with_key = new Func<DataGridViewRow, bool>(row =>
@@ -1005,7 +1033,7 @@ namespace CKAN
                     // Remember the first match to allow cycling back to it if necessary
                     first_match = row;
                 }
-                if (key.Length == 1 && row_match && row.Index <= current_row.Index)
+                if (key.Length == 1 && row_match && row.Index <= currentIndex)
                 {
                     // Keep going forward if it's a single key match and not ahead of the current row
                     return false;
@@ -1031,6 +1059,19 @@ namespace CKAN
             {
                 this.AddStatusMessage("Not found");
             }
+        }
+
+        private void RecommendedModsToggleCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+          var state = ((CheckBox)sender).Checked;
+          foreach (ListViewItem item in RecommendedModsListView.Items)
+          {
+            if (item.Checked != state)
+            {
+              item.Checked = state;
+            }
+          }
+          RecommendedModsListView.Refresh();
         }
     }
 

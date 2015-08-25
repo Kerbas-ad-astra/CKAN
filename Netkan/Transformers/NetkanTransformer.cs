@@ -31,13 +31,15 @@ namespace CKAN.NetKAN.Transformers
                 new JenkinsTransformer(),
                 new InternalCkanTransformer(http, moduleService),
                 new AvcTransformer(http, moduleService),
+                new VersionEditTransformer(),
                 new ForcedVTransformer(),
                 new EpochTransformer(),
                 new VersionedOverrideTransformer(),
                 new DownloadSizeTransformer(http, fileService),
                 new GeneratedByTransformer(),
                 new OptimusPrimeTransformer(),
-                new StripNetkanMetadataTransformer()
+                new StripNetkanMetadataTransformer(),
+                new PropertySortTransformer()
             };
         }
 
