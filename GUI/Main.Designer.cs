@@ -61,6 +61,15 @@ namespace CKAN
             this.FilterAllButton = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.ModList = new CKAN.MainModListGUI();
+            this.Installed = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Update = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.LatestVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.KSPCompatibility = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SizeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ModInfoTabControl = new System.Windows.Forms.TabControl();
             this.MetadataTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -102,9 +111,9 @@ namespace CKAN
             this.CancelChangesButton = new System.Windows.Forms.Button();
             this.ConfirmChangesButton = new System.Windows.Forms.Button();
             this.ChangesListView = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Mod = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ChangeType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Reason = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.WaitTabPage = new System.Windows.Forms.TabPage();
             this.CancelCurrentActionButton = new System.Windows.Forms.Button();
             this.LogTextBox = new System.Windows.Forms.TextBox();
@@ -126,15 +135,7 @@ namespace CKAN
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ChooseProvidedModsLabel = new System.Windows.Forms.Label();
-            this.Installed = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Update = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.ModName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.InstalledVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.LatestVersion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.KSPCompatibility = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SizeCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cachedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.menuStrip2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -341,6 +342,7 @@ namespace CKAN
             this.FilterCompatibleButton,
             this.FilterInstalledButton,
             this.FilterInstalledUpdateButton,
+            this.cachedToolStripMenuItem,
             this.FilterNewButton,
             this.FilterNotInstalledButton,
             this.FilterIncompatibleButton,
@@ -453,6 +455,75 @@ namespace CKAN
             this.ModList.SelectionChanged += new System.EventHandler(this.ModList_SelectedIndexChanged);
             this.ModList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ModList_KeyDown);
             this.ModList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ModList_KeyPress);
+            // 
+            // Installed
+            // 
+            this.Installed.HeaderText = "Installed";
+            this.Installed.Name = "Installed";
+            this.Installed.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.Installed.Width = 50;
+            // 
+            // Update
+            // 
+            this.Update.HeaderText = "Update";
+            this.Update.Name = "Update";
+            this.Update.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.Update.Width = 46;
+            // 
+            // ModName
+            // 
+            this.ModName.HeaderText = "Name";
+            this.ModName.Name = "ModName";
+            this.ModName.ReadOnly = true;
+            this.ModName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.ModName.Width = 250;
+            // 
+            // Author
+            // 
+            this.Author.HeaderText = "Author";
+            this.Author.Name = "Author";
+            this.Author.ReadOnly = true;
+            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.Author.Width = 120;
+            // 
+            // InstalledVersion
+            // 
+            this.InstalledVersion.HeaderText = "Installed version";
+            this.InstalledVersion.Name = "InstalledVersion";
+            this.InstalledVersion.ReadOnly = true;
+            this.InstalledVersion.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.InstalledVersion.Width = 70;
+            // 
+            // LatestVersion
+            // 
+            this.LatestVersion.HeaderText = "Latest version";
+            this.LatestVersion.Name = "LatestVersion";
+            this.LatestVersion.ReadOnly = true;
+            this.LatestVersion.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.LatestVersion.Width = 70;
+            // 
+            // KSPCompatibility
+            // 
+            this.KSPCompatibility.HeaderText = "Max KSP version";
+            this.KSPCompatibility.Name = "KSPCompatibility";
+            this.KSPCompatibility.ReadOnly = true;
+            this.KSPCompatibility.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.KSPCompatibility.Width = 78;
+            // 
+            // SizeCol
+            // 
+            this.SizeCol.HeaderText = "Download (KB)";
+            this.SizeCol.Name = "SizeCol";
+            this.SizeCol.ReadOnly = true;
+            this.SizeCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            // 
+            // Description
+            // 
+            this.Description.HeaderText = "Description";
+            this.Description.Name = "Description";
+            this.Description.ReadOnly = true;
+            this.Description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
+            this.Description.Width = 821;
             // 
             // ModInfoTabControl
             // 
@@ -948,9 +1019,10 @@ namespace CKAN
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ChangesListView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ChangesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
+            this.Mod,
             this.ChangeType,
-            this.columnHeader2});
+            this.Reason});
+            this.ChangesListView.FullRowSelect = true;
             this.ChangesListView.Location = new System.Drawing.Point(-1, 0);
             this.ChangesListView.Name = "ChangesListView";
             this.ChangesListView.Size = new System.Drawing.Size(1022, 611);
@@ -958,20 +1030,20 @@ namespace CKAN
             this.ChangesListView.UseCompatibleStateImageBehavior = false;
             this.ChangesListView.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader1
+            // Mod
             // 
-            this.columnHeader1.Text = "Mod";
-            this.columnHeader1.Width = 332;
+            this.Mod.Text = "Mod";
+            this.Mod.Width = 332;
             // 
             // ChangeType
             // 
             this.ChangeType.Text = "Change";
             this.ChangeType.Width = 111;
             // 
-            // columnHeader2
+            // Reason
             // 
-            this.columnHeader2.Text = "Description";
-            this.columnHeader2.Width = 606;
+            this.Reason.Text = "Reason for action";
+            this.Reason.Width = 606;
             // 
             // WaitTabPage
             // 
@@ -985,7 +1057,7 @@ namespace CKAN
             this.WaitTabPage.Padding = new System.Windows.Forms.Padding(3);
             this.WaitTabPage.Size = new System.Drawing.Size(1021, 646);
             this.WaitTabPage.TabIndex = 1;
-            this.WaitTabPage.Text = "Installing mods";
+            this.WaitTabPage.Text = "Status log";
             // 
             // CancelCurrentActionButton
             // 
@@ -1112,6 +1184,7 @@ namespace CKAN
             this.columnHeader3,
             this.columnHeader4,
             this.columnHeader5});
+            this.RecommendedModsListView.FullRowSelect = true;
             this.RecommendedModsListView.Location = new System.Drawing.Point(6, 29);
             this.RecommendedModsListView.Name = "RecommendedModsListView";
             this.RecommendedModsListView.Size = new System.Drawing.Size(1007, 582);
@@ -1182,6 +1255,7 @@ namespace CKAN
             this.ChooseProvidedModsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader6,
             this.columnHeader8});
+            this.ChooseProvidedModsListView.FullRowSelect = true;
             this.ChooseProvidedModsListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.ChooseProvidedModsListView.Location = new System.Drawing.Point(6, 28);
             this.ChooseProvidedModsListView.MultiSelect = false;
@@ -1210,74 +1284,12 @@ namespace CKAN
             this.ChooseProvidedModsLabel.TabIndex = 7;
             this.ChooseProvidedModsLabel.Text = "Several mods provide the virtual module Foo, choose one of the following mods:";
             // 
-            // Installed
+            // cachedToolStripMenuItem
             // 
-            this.Installed.HeaderText = "Installed";
-            this.Installed.Name = "Installed";
-            this.Installed.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.Installed.Width = 50;
-            // 
-            // Update
-            // 
-            this.Update.HeaderText = "Update";
-            this.Update.Name = "Update";
-            this.Update.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.Update.Width = 46;
-            // 
-            // ModName
-            // 
-            this.ModName.HeaderText = "Name";
-            this.ModName.Name = "ModName";
-            this.ModName.ReadOnly = true;
-            this.ModName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.ModName.Width = 250;
-            // 
-            // Author
-            // 
-            this.Author.HeaderText = "Author";
-            this.Author.Name = "Author";
-            this.Author.ReadOnly = true;
-            this.Author.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.Author.Width = 120;
-            // 
-            // InstalledVersion
-            // 
-            this.InstalledVersion.HeaderText = "Installed version";
-            this.InstalledVersion.Name = "InstalledVersion";
-            this.InstalledVersion.ReadOnly = true;
-            this.InstalledVersion.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.InstalledVersion.Width = 70;
-            // 
-            // LatestVersion
-            // 
-            this.LatestVersion.HeaderText = "Latest version";
-            this.LatestVersion.Name = "LatestVersion";
-            this.LatestVersion.ReadOnly = true;
-            this.LatestVersion.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.LatestVersion.Width = 70;
-            // 
-            // KSPCompatibility
-            // 
-            this.KSPCompatibility.HeaderText = "Max KSP version";
-            this.KSPCompatibility.Name = "KSPCompatibility";
-            this.KSPCompatibility.ReadOnly = true;
-            this.KSPCompatibility.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.KSPCompatibility.Width = 78;
-            // 
-            // SizeCol
-            // 
-            this.SizeCol.HeaderText = "Download (KB)";
-            this.SizeCol.Name = "SizeCol";
-            this.SizeCol.ReadOnly = true;
-            this.SizeCol.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            // 
-            // Description
-            // 
-            this.Description.HeaderText = "Description";
-            this.Description.Name = "Description";
-            this.Description.ReadOnly = true;
-            this.Description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Programmatic;
-            this.Description.Width = 821;
+            this.cachedToolStripMenuItem.Name = "cachedToolStripMenuItem";
+            this.cachedToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.cachedToolStripMenuItem.Text = "Cached";
+            this.cachedToolStripMenuItem.Click += new System.EventHandler(this.cachedToolStripMenuItem_Click);
             // 
             // Main
             // 
@@ -1392,9 +1404,9 @@ namespace CKAN
         private Button CancelChangesButton;
         private Button ConfirmChangesButton;
         private ListView ChangesListView;
-        private ColumnHeader columnHeader1;
+        private ColumnHeader Mod;
         private ColumnHeader ChangeType;
-        private ColumnHeader columnHeader2;
+        private ColumnHeader Reason;
         private TabPage ChooseRecommendedModsTabPage;
         private Label RecommendedDialogLabel;
         private ListView RecommendedModsListView;
@@ -1437,5 +1449,6 @@ namespace CKAN
         private DataGridViewTextBoxColumn KSPCompatibility;
         private DataGridViewTextBoxColumn SizeCol;
         private DataGridViewTextBoxColumn Description;
+        private ToolStripMenuItem cachedToolStripMenuItem;
     }
 }

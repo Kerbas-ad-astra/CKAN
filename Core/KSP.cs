@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace CKAN
     /// <summary>
     ///     Everything for dealing with KSP itself.
     /// </summary>
-    public class KSP
+    public class KSP : IDisposable
     {
         public IUser User { get; set; }
 
@@ -99,6 +100,19 @@ namespace CKAN
             }
 
             log.DebugFormat("Initialised {0}", CkanDir());
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="CKAN.KSP"/> object.
+        /// </summary>
+        /// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="CKAN.KSP"/>. The <see cref="Dispose"/>
+        /// method leaves the <see cref="CKAN.KSP"/> in an unusable state. After calling <see cref="Dispose"/>, you must
+        /// release all references to the <see cref="CKAN.KSP"/> so the garbage collector can reclaim the memory that
+        /// the <see cref="CKAN.KSP"/> was occupying.</remarks>
+        public void Dispose()
+        {
+            if (Cache != null)
+                Cache.Dispose();
         }
 
         #endregion
@@ -234,47 +248,86 @@ namespace CKAN
 
         public string GameData()
         {
-            return Path.Combine(GameDir(), "GameData");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(GameDir(), "GameData")
+            );
         }
 
         public string CkanDir()
         {
-            return Path.Combine(GameDir(), "CKAN");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(GameDir(), "CKAN")
+            );
         }
 
         public string DownloadCacheDir()
         {
-            return Path.Combine(CkanDir(), "downloads");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(CkanDir(), "downloads")
+            );
         }
 
         public string Ships()
         {
-            return Path.Combine(GameDir(), "Ships");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(GameDir(), "Ships")
+            );
         }
 
         public string ShipsVab()
         {
-            return Path.Combine(Ships(), "VAB");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(Ships(), "VAB")
+            );
         }
 
         public string ShipsSph()
         {
-            return Path.Combine(Ships(), "SPH");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(Ships(), "SPH")
+            );
+        }
+
+        public string ShipsThumbs()
+        {
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(Ships(), "@thumbs")
+            );
+        }
+
+        public string ShipsThumbsSPH()
+        {
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(ShipsThumbs(), "SPH")
+            );
+        }
+
+        public string ShipsThumbsVAB()
+        {
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(ShipsThumbs(), "VAB")
+            );
         }
 
         public string Tutorial()
         {
-            return Path.Combine(GameDir(), "saves", "training");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(GameDir(), "saves", "training")
+            );
         }
 
         public string Scenarios()
         {
-            return Path.Combine(GameDir(), "saves", "scenarios");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(GameDir(), "saves", "scenarios")
+            );
         }
 
         public string TempDir()
         {
-            return Path.Combine(CkanDir(), "temp");
+            return KSPPathUtils.NormalizePath(
+                Path.Combine(CkanDir(), "temp")
+            );
         }
 
         public KSPVersion Version()
@@ -296,6 +349,9 @@ namespace CKAN
         /// </summary>
         public void CleanCache()
         {
+            // TODO: We really should be asking our Cache object to do the
+            // cleaning, rather than doing it ourselves.
+            
             log.Debug("Cleaning cahce directory");
 
             string[] files = Directory.GetFiles(DownloadCacheDir(), "*", SearchOption.AllDirectories);

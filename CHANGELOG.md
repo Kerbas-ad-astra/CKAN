@@ -10,7 +10,40 @@ All notable changes to this project will be documented in this file.
 
 ### Internal
 
-- [NetKAN] `netkan.exe` will now report its version and exit if run with the `--version` switch.
+## v1.14.2 (Makemake)
+
+### Bugfixes
+
+- [GUI] Numerical columns can now be sorted numerically. (Postremus, #1420)
+- [GUI] Clicking on rows in suggests, recommends, and requirement pickers now selects the whole row, not just the cell clicked. (Postremus, #1438)
+
+### Features
+
+- [GUI] Updating the list of available mods will no longer clear user selections. (Postremus, #1402)
+- [GUI] Mods can be search by abbreviation by typing directly into the modlist, as well as the search bar. (Postremus, #1430)
+- [GUI] Mods can be filtered by locally cached status (Postremus, #1426)
+
+### Internal
+
+- [Updater] Checking for updates takes less network resources, and is more resilient to malformed release notes. (Postremus #1410; pjf #1453)
+- [Core] We now cache the results of cache look-ups (so you can cache while you cache... faster). (pjf, #1454)
+
+## v1.14.1 (Eris)
+
+### Bugfixes
+
+- [GUI] Re-ordering repositories in the settings panel is more stable. (Postremus, #1431)
+- [GUI] Fixed an unhandled exception that could occur when installing metapages via `Install -> From .ckan`. (Postremus, #1436)
+- [Core] Less likely to remove essential directories (such as `Ships/*`) if empty. (Postremus, #1405)
+
+### Features
+
+- [All] When installing and uninstalling mods, the mod name and version will be used rather than the internal identifier. (Postremus, #1401)
+- [GUI] The GUI changeset screen now provides explanations as to why changes are being made. (Postremus, #1412)
+
+### Internal
+
+- [NetKAN] `netkan.exe` will now report its version and exit if run with the `--version` switch. (pjf, #1415)
 
 ## v1.14.0 (Mimas)
 
@@ -22,7 +55,7 @@ All notable changes to this project will be documented in this file.
 - [GUI] The 'mark for update' button no longer highlights when the only upgrade candidates are autodetected mods we can't actually upgrade. (Postremus, #1392)
 - [Core] Installing from `.ckan` files (such as exported modlists) is more likely to succeed even when dependencies are complex. (#1337, Postremus)
 - [Cmdline] `ckan.exe --verbose` and `ckan.exe --debug` now start the GUI with the appropriate logging mode. (#1403, Postremus)
-- [Updater] We'll no longer try to download a CKAN release that hasn't finished building its assets yet.
+- [Updater] We'll no longer try to download a CKAN release that hasn't finished building its assets yet. (Postremus, #1397)
 
 ### Features
 
