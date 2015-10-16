@@ -352,7 +352,7 @@ namespace CKAN
             KSPVersion version)
         {
             var modules_to_install = new HashSet<CkanModule>();
-            var modules_to_remove = new HashSet<Module>();
+            var modules_to_remove = new HashSet<CkanModule>();
             var options = new RelationshipResolverOptions
             {
                 without_toomanyprovides_kraken = false,
@@ -365,6 +365,7 @@ namespace CKAN
                 {
                     case GUIModChangeType.None:
                         break;
+                    case GUIModChangeType.Update:
                     case GUIModChangeType.Install:
                         //TODO: Fix
                         //This will give us a mod with a wrong version!
@@ -372,8 +373,6 @@ namespace CKAN
                         break;
                     case GUIModChangeType.Remove:
                         modules_to_remove.Add(change.Mod);
-                        break;
-                    case GUIModChangeType.Update:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -422,7 +421,7 @@ namespace CKAN
             foreach (var dependency in registry.FindReverseDependencies(modules_to_remove.Select(mod=>mod.identifier)))
             {
                 //TODO This would be a good place to have a event that alters the row's graphics to show it will be removed
-                Module module_by_version = registry.GetModuleByVersion(installed_modules[dependency].identifier,
+                CkanModule module_by_version = registry.GetModuleByVersion(installed_modules[dependency].identifier,
                     installed_modules[dependency].version) ?? registry.InstalledModule(dependency).Module;
                 changeSet.Add(new ModChange(new GUIMod(module_by_version, registry, version), GUIModChangeType.Remove, null));
             }
@@ -547,7 +546,8 @@ namespace CKAN
         private bool IsNameInNameFilter(GUIMod mod)
         {
             return mod.Name.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1
-                || mod.Abbrevation.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
+                || mod.Abbrevation.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1
+                || mod.Identifier.IndexOf(ModNameFilter, StringComparison.InvariantCultureIgnoreCase) != -1;
         }
 
         private bool IsAuthorInauthorFilter(GUIMod mod)

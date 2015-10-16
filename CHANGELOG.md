@@ -10,6 +10,28 @@ All notable changes to this project will be documented in this file.
 
 ### Internal
 
+## v1.14.3 (Haumea)
+
+### Bugfixes
+
+- [Core] CKAN is more likely to find your KSP install. (McJones, #1480)
+- [Core] Uninstalled mods will no longer be reported as upgradeable when another mod provides their fuctionality. (Postremus, #1449)
+- [GUI] Installing a `.ckan` virtual mod will crash the client with an NRE less often (Postremus, #1478)
+- [GUI] The "Installing mods" tab is now called the "Status log" tab, as it's used for upgrading and removing mods too. (plague006, #1460)
+- [GUI] Links to `ckan://` resources under Linux are more likely to be handled correctly. (Postremus, #1434)
+- [GUI] Mods upgrades with additional dependencies are better handled and displayed to the user. (Postremus, #1447)
+
+### Features
+
+- [GUI] The CKAN Identifer for each mod is now shown in their metadata panel. (plague006, #1476)
+- [GUI] Double-clicking on a filename in the 'Contents' panel now opens the directory containing that file. (Postremus, #1443)
+- [GUI] The progress bar now shows the progress of downloading to the cache. (Postremus, #1445)
+- [GUI] Mods can now be searched by their CKAN identifier in the name textbox (Postremus, #1475)
+
+### Internal
+
+- [Internal] `Module` and `CkanModule` are finally merged into the same class! (Postremus, #1440)
+
 ## v1.14.2 (Makemake)
 
 ### Bugfixes

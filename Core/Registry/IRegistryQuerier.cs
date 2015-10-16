@@ -52,7 +52,7 @@ namespace CKAN
         /// Gets the installed version of a mod. Does not check for provided or autodetected mods.
         /// </summary>
         /// <returns>The module or null if not found</returns>
-        Module GetInstalledVersion(string identifer);
+        CkanModule GetInstalledVersion(string identifer);
 
         /// <summary>
         /// Attempts to find a module with the given identifier and version.
@@ -139,7 +139,7 @@ namespace CKAN
                 return false;
             }
             if (newest_version == null) return false;
-            return !new List<string>(querier.InstalledDlls).Contains(identifier) && querier.IsInstalled(identifier) 
+            return !new List<string>(querier.InstalledDlls).Contains(identifier) && querier.IsInstalled(identifier, false) 
                 && newest_version.version.IsGreaterThan(querier.InstalledVersion(identifier));
         }
     }
